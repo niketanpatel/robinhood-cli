@@ -16,7 +16,7 @@ class RobinhoodClient(object):
             'username': username,
             'password': password
         }
-        def _login_api_call():
+        def login_api_call_helper():
             try:
                 response = requests.post(self.api_url + '/api-token-auth/', data=request, headers=self._headers())
                 response.raise_for_status()
@@ -25,10 +25,10 @@ class RobinhoodClient(object):
                 sys.exit(1)
             return json.loads(response.text)
 
-        response = _login_api_call()
+        response = login_api_call_helper()
         if 'mfa_required' in response:
             request['mfa_code'] = raw_input("Enter code: ")
-            response = _login_api_call()
+            response = login_api_call_helper()
         self.token = response['token']
         print "Successfully logged in as {}".format(username)
 
